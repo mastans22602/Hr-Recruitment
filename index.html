@@ -319,6 +319,44 @@
     .badge.shortlisted { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
     .badge.maybe { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning-border); }
     .badge.archived { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-border); }
+    .badge.processing { background: #EFF6FF; color: var(--brand); border: 1px solid #BFDBFE; }
+    .badge.pending { background: #EFF6FF; color: var(--brand); border: 1px solid #BFDBFE; }
+
+    .processing-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: #F0F9FF;
+      border: 1px solid #BAE6FD;
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-top: 1rem;
+      font-size: 13px;
+      color: #0369A1;
+      line-height: 1.6;
+    }
+    .processing-note svg { width: 18px; height: 18px; flex-shrink: 0; stroke: #0369A1; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-top: 1px; }
+
+    .sheet-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--brand);
+      text-decoration: none;
+      padding: 6px 12px;
+      background: #fff;
+      border: 1px solid #BFDBFE;
+      border-radius: var(--radius);
+      transition: background 0.15s;
+    }
+    .sheet-link:hover { background: var(--brand-light); }
+    .sheet-link svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    .pulse { animation: pulse 1.5s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
     .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
     .score-section { margin-bottom: 1.25rem; }
@@ -507,6 +545,18 @@
     </div>
 
     <div class="result-summary" id="resultSummary"></div>
+
+    <div class="processing-note" id="processingNote" style="display:none">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div>
+        The AI is evaluating this resume in the background. The full score, decision, and candidate details will appear in your Google Sheets tracker within ~1 minute.
+        <br/>
+        <a class="sheet-link" id="sheetLink" href="#" target="_blank">
+          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open Google Sheets Tracker
+        </a>
+      </div>
+    </div>
   </div>
 </main>
 
@@ -515,9 +565,13 @@
 </footer>
 
 <script>
-  /* ── CONFIG ── Update this with your n8n webhook URL ── */
-  const WEBHOOK_URL = 'https://among-harbor-borough.ngrok-free.dev/webhook/hr-recruitment';
-  /* ───────────────────────────────────────────────────── */
+  /* ── CONFIG ── Update both values below ── */
+  const WEBHOOK_URL = 'YOUR_N8N_WEBHOOK_URL';
+  const SHEET_URL = 'YOUR_GOOGLE_SHEET_URL'; // e.g. https://docs.google.com/spreadsheets/d/abc123/edit
+  /* ───────────────────────────────────────── */
+
+  // Set sheet link dynamically
+  document.getElementById('sheetLink').href = SHEET_URL;
 
   function handleFile(input) {
     const zone = document.getElementById('uploadZone');
@@ -546,7 +600,29 @@
     }
   }
 
-  function showStatus(type, msg) {
+  function showProcessing(name, role) {
+    const card = document.getElementById('resultCard');
+    document.getElementById('resultName').textContent = name;
+    document.getElementById('resultRole').textContent = role || '';
+    document.getElementById('metaExp').textContent = '—';
+    document.getElementById('metaRole').textContent = '—';
+    document.getElementById('metaEdu').textContent = '—';
+    document.getElementById('scoreVal').textContent = '— / 10';
+    document.getElementById('scoreFill').style.width = '0%';
+    document.getElementById('resultSummary').textContent = '';
+
+    const badge = document.getElementById('resultBadge');
+    const badgeText = document.getElementById('badgeText');
+    badge.className = 'badge processing';
+    badge.querySelector('.badge-dot').classList.add('pulse');
+    badgeText.textContent = 'Processing';
+
+    document.getElementById('processingNote').style.display = 'flex';
+    card.classList.add('show');
+    setStep(3);
+  }
+
+
     const box = document.getElementById('statusBox');
     const icon = document.getElementById('statusIcon');
     const text = document.getElementById('statusText');
@@ -614,17 +690,40 @@
     formData.append('notes', notes);
     formData.append('resume', file, file.name);
 
+    // Set a 60 second timeout to wait for n8n AI response
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 60000);
+
     try {
-      const res = await fetch(WEBHOOK_URL, { method: 'POST', body: formData });
+      const res = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        body: formData,
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
+
       if (!res.ok) throw new Error('HTTP ' + res.status);
       let data = {};
       const ct = res.headers.get('content-type') || '';
-      if (ct.includes('application/json')) data = await res.json();
-      showStatus('success', 'Resume screened! Decision logged to Google Sheets and emails sent.');
-      showResult(data);
+      if (ct.includes('application/json')) {
+        data = await res.json();
+      }
+
+      // Check if we got real AI data back
+      if (data && data.score && parseFloat(data.score) > 0) {
+        showStatus('success', '✅ AI screening complete! Decision logged to Google Sheets and emails sent.');
+        showResult(data);
+      } else {
+        // n8n responded but no score yet — still processing
+        showStatus('success', '✅ Resume received! AI is evaluating — check Google Sheets in ~1 minute.');
+        showProcessing(name, position);
+      }
+
     } catch (e) {
-      showStatus('success', 'Resume submitted to n8n! Check your Google Sheets tracker in ~1 minute for the AI decision.');
-      showResult({ candidate: name, score: 0, decision: 'Pending', summary: 'Resume sent to n8n pipeline. The AI will evaluate and log results to your Google Sheets tracker shortly.' });
+      clearTimeout(timeout);
+      // Timeout or network error — resume was sent, AI is working in background
+      showStatus('success', '✅ Resume submitted! AI is screening in the background.');
+      showProcessing(name, position);
     }
 
     btn.disabled = false;
