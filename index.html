@@ -6,33 +6,35 @@
   <title>AI HR Recruitment Assistant</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --brand: #2563EB;
-      --brand-dark: #1D4ED8;
-      --brand-light: #EFF6FF;
-      --success: #16A34A;
-      --success-bg: #F0FDF4;
-      --success-border: #BBF7D0;
-      --warning: #B45309;
-      --warning-bg: #FFFBEB;
-      --warning-border: #FDE68A;
-      --danger: #DC2626;
-      --danger-bg: #FEF2F2;
-      --danger-border: #FECACA;
-      --gray-50: #F9FAFB;
-      --gray-100: #F3F4F6;
-      --gray-200: #E5E7EB;
-      --gray-300: #D1D5DB;
-      --gray-400: #9CA3AF;
-      --gray-500: #6B7280;
-      --gray-700: #374151;
-      --gray-900: #111827;
-      --radius: 10px;
-      --radius-lg: 16px;
+      --navy:       #0F172A;
+      --navy-mid:   #1E293B;
+      --navy-light: #334155;
+      --indigo:     #6366F1;
+      --indigo-d:   #4F46E5;
+      --indigo-l:   #EEF2FF;
+      --emerald:    #10B981;
+      --emerald-l:  #D1FAE5;
+      --amber:      #F59E0B;
+      --amber-l:    #FEF3C7;
+      --coral:      #EF4444;
+      --coral-l:    #FEE2E2;
+      --sky:        #38BDF8;
+      --white:      #FFFFFF;
+      --gray-50:    #F8FAFC;
+      --gray-100:   #F1F5F9;
+      --gray-200:   #E2E8F0;
+      --gray-400:   #94A3B8;
+      --gray-500:   #64748B;
+      --gray-700:   #334155;
+      --gray-900:   #0F172A;
+      --radius:     12px;
+      --radius-lg:  18px;
+      --radius-xl:  24px;
     }
 
     body {
@@ -40,532 +42,824 @@
       background: var(--gray-50);
       color: var(--gray-900);
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    /* Header */
-    header {
-      background: #fff;
-      border-bottom: 1px solid var(--gray-200);
-      padding: 0 2rem;
+    /* ── HERO ── */
+    .hero {
+      background: var(--navy);
+      position: relative;
+      overflow: hidden;
+      padding: 0 1.5rem 5rem;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 50%, rgba(99,102,241,0.35) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 20%, rgba(56,189,248,0.2) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 50% at 60% 80%, rgba(16,185,129,0.15) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    /* Floating orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.4;
+      pointer-events: none;
+      animation: float 8s ease-in-out infinite;
+    }
+    .orb-1 { width: 300px; height: 300px; background: var(--indigo); top: -80px; right: 10%; animation-delay: 0s; }
+    .orb-2 { width: 200px; height: 200px; background: var(--sky); bottom: 0; left: 5%; animation-delay: 3s; }
+    .orb-3 { width: 150px; height: 150px; background: var(--emerald); top: 40%; right: 30%; animation-delay: 5s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-20px) scale(1.05); }
+    }
+
+    /* Dot grid */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+    }
+
+    /* Nav */
+    nav {
+      position: relative;
+      z-index: 10;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 64px;
+      padding: 1.5rem 0;
+      max-width: 900px;
+      margin: 0 auto;
     }
+
     .logo {
       display: flex;
       align-items: center;
       gap: 10px;
-      font-family: 'Sora', sans-serif;
-      font-weight: 700;
-      font-size: 18px;
-      color: var(--gray-900);
       text-decoration: none;
     }
     .logo-icon {
-      width: 34px;
-      height: 34px;
-      background: var(--brand);
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--indigo), var(--sky));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(99,102,241,0.5);
+    }
+    .logo-icon svg { width: 20px; height: 20px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .logo-text {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--white);
+      letter-spacing: -0.02em;
+    }
+    .logo-text span { color: var(--sky); }
+
+    .nav-badge {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--indigo);
+      background: rgba(99,102,241,0.15);
+      border: 1px solid rgba(99,102,241,0.3);
+      padding: 5px 12px;
+      border-radius: 999px;
+    }
+
+    /* Hero content */
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+      padding-top: 3rem;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sky);
+      margin-bottom: 1.5rem;
+    }
+    .hero-eyebrow::before, .hero-eyebrow::after {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--sky);
+      opacity: 0.6;
+    }
+
+    .hero-title {
+      font-family: 'Sora', sans-serif;
+      font-size: clamp(32px, 6vw, 56px);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+    }
+    .hero-title .highlight {
+      background: linear-gradient(135deg, var(--indigo) 0%, var(--sky) 50%, var(--emerald) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      color: rgba(255,255,255,0.6);
+      max-width: 520px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+
+    /* Stats row */
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-val {
+      font-family: 'Sora', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1;
+    }
+    .stat-val span { color: var(--indigo); }
+    .stat-label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+      margin-top: 4px;
+      letter-spacing: 0.04em;
+    }
+
+    /* Steps bar */
+    .steps-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      position: relative;
+    }
+    .step-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      width: 100%;
+      height: 2px;
+      background: rgba(255,255,255,0.1);
+    }
+    .step-item.done:not(:last-child)::after { background: var(--indigo); }
+
+    .step-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.4);
+      transition: all 0.3s;
+      position: relative;
+      z-index: 1;
+    }
+    .step-item.active .step-circle {
+      background: var(--indigo);
+      border-color: var(--indigo);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(99,102,241,0.6);
+    }
+    .step-item.done .step-circle {
+      background: var(--emerald);
+      border-color: var(--emerald);
+      color: #fff;
+    }
+    .step-item.done .step-circle::after {
+      content: '✓';
+    }
+    .step-item.done .step-num { display: none; }
+    .step-lbl {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+    .step-item.active .step-lbl { color: var(--sky); }
+    .step-item.done .step-lbl { color: var(--emerald); }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 760px;
+      margin: -2.5rem auto 0;
+      padding: 0 1.5rem 5rem;
+      position: relative;
+      z-index: 20;
+    }
+
+    /* Glass card */
+    .glass-card {
+      background: rgba(255,255,255,0.97);
+      border: 1px solid rgba(255,255,255,0.8);
+      border-radius: var(--radius-xl);
+      box-shadow:
+        0 4px 6px rgba(0,0,0,0.04),
+        0 20px 60px rgba(0,0,0,0.1),
+        0 0 0 1px rgba(99,102,241,0.05);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+      padding: 1.5rem 2rem 1.25rem;
+      border-bottom: 1px solid var(--gray-100);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-header-icon {
+      width: 32px;
+      height: 32px;
       border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .logo-icon svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .header-badge {
-      font-size: 12px;
-      background: var(--brand-light);
-      color: var(--brand);
-      padding: 4px 12px;
-      border-radius: 999px;
-      font-weight: 500;
-    }
-
-    /* Layout */
-    main {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 3rem 1.5rem 4rem;
-    }
-
-    .page-title {
+    .card-header-icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .card-header-icon.indigo { background: var(--indigo-l); color: var(--indigo); }
+    .card-header-icon.emerald { background: var(--emerald-l); color: var(--emerald); }
+    .card-header-title {
       font-family: 'Sora', sans-serif;
-      font-size: 28px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--gray-900);
-      margin-bottom: 8px;
     }
-    .page-sub {
-      font-size: 15px;
-      color: var(--gray-500);
-      margin-bottom: 2.5rem;
-      line-height: 1.6;
-    }
+    .card-header-sub { font-size: 12px; color: var(--gray-400); margin-left: auto; }
 
-    /* Steps indicator */
-    .steps {
-      display: flex;
-      gap: 0;
-      margin-bottom: 2.5rem;
-      position: relative;
-    }
-    .steps::before {
-      content: '';
-      position: absolute;
-      top: 16px;
-      left: 16px;
-      right: 16px;
-      height: 1px;
-      background: var(--gray-200);
-      z-index: 0;
-    }
-    .step {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      position: relative;
-      z-index: 1;
-    }
-    .step-num {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: #fff;
-      border: 2px solid var(--gray-200);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--gray-400);
-      transition: all 0.2s;
-    }
-    .step.active .step-num { background: var(--brand); border-color: var(--brand); color: #fff; }
-    .step.done .step-num { background: var(--success); border-color: var(--success); color: #fff; }
-    .step-label { font-size: 11px; color: var(--gray-400); font-weight: 500; text-align: center; }
-    .step.active .step-label { color: var(--brand); }
-    .step.done .step-label { color: var(--success); }
+    .card-body { padding: 1.75rem 2rem; }
 
-    /* Card */
-    .card {
-      background: #fff;
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-lg);
-      padding: 2rem;
-      margin-bottom: 1.25rem;
-    }
-    .card-title {
-      font-size: 13px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--gray-400);
-      margin-bottom: 1.25rem;
-    }
-
-    /* Form elements */
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .form-group { margin-bottom: 1.25rem; }
+    /* Form */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .form-group { margin-bottom: 1rem; }
     .form-group:last-child { margin-bottom: 0; }
 
     label {
       display: block;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--gray-700);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--gray-500);
       margin-bottom: 6px;
     }
-    label .req { color: var(--danger); margin-left: 2px; }
+    label .req { color: var(--coral); }
 
     input[type=text], input[type=email], select, textarea {
       width: 100%;
-      padding: 9px 12px;
+      padding: 10px 14px;
       font-size: 14px;
       font-family: 'Inter', sans-serif;
-      border: 1px solid var(--gray-200);
+      border: 1.5px solid var(--gray-200);
       border-radius: var(--radius);
       background: var(--gray-50);
       color: var(--gray-900);
       outline: none;
-      transition: border-color 0.15s, box-shadow 0.15s;
+      transition: all 0.2s;
     }
     input[type=text]:focus, input[type=email]:focus, select:focus, textarea:focus {
-      border-color: var(--brand);
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+      border-color: var(--indigo);
       background: #fff;
+      box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
     }
-    textarea { min-height: 80px; resize: vertical; }
-    select { cursor: pointer; }
+    textarea { min-height: 76px; resize: vertical; }
+    select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
 
-    /* Upload zone */
+    /* Upload */
     .upload-zone {
       border: 2px dashed var(--gray-200);
-      border-radius: var(--radius);
+      border-radius: var(--radius-lg);
       padding: 2.5rem 1.5rem;
       text-align: center;
       cursor: pointer;
       transition: all 0.2s;
       background: var(--gray-50);
+      position: relative;
     }
-    .upload-zone:hover { border-color: var(--brand); background: var(--brand-light); }
-    .upload-zone.has-file { border-color: var(--success); background: var(--success-bg); border-style: solid; }
-
-    .upload-icon {
-      width: 48px;
-      height: 48px;
+    .upload-zone:hover {
+      border-color: var(--indigo);
+      background: var(--indigo-l);
+    }
+    .upload-zone.has-file {
+      border-color: var(--emerald);
+      background: var(--emerald-l);
+      border-style: solid;
+    }
+    .upload-icon-wrap {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
       margin: 0 auto 12px;
-      background: var(--gray-100);
-      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
+      background: var(--gray-200);
+      transition: all 0.2s;
     }
-    .upload-zone.has-file .upload-icon { background: var(--success-bg); }
-    .upload-icon svg { width: 22px; height: 22px; stroke: var(--gray-400); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .upload-zone.has-file .upload-icon svg { stroke: var(--success); }
-
-    .upload-title { font-size: 14px; font-weight: 500; color: var(--gray-700); margin-bottom: 4px; }
-    .upload-zone.has-file .upload-title { color: var(--success); }
+    .upload-zone:hover .upload-icon-wrap { background: rgba(99,102,241,0.15); }
+    .upload-zone.has-file .upload-icon-wrap { background: rgba(16,185,129,0.2); }
+    .upload-icon-wrap svg { width: 24px; height: 24px; stroke: var(--gray-400); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.2s; }
+    .upload-zone:hover .upload-icon-wrap svg { stroke: var(--indigo); }
+    .upload-zone.has-file .upload-icon-wrap svg { stroke: var(--emerald); }
+    .upload-title { font-size: 14px; font-weight: 600; color: var(--gray-700); margin-bottom: 4px; transition: color 0.2s; }
+    .upload-zone.has-file .upload-title { color: var(--emerald); }
     .upload-hint { font-size: 12px; color: var(--gray-400); }
 
     /* Submit button */
     .submit-btn {
       width: 100%;
-      padding: 13px;
-      background: var(--brand);
+      padding: 14px;
+      background: linear-gradient(135deg, var(--indigo-d) 0%, var(--indigo) 50%, #818CF8 100%);
       color: #fff;
       border: none;
       border-radius: var(--radius);
       font-size: 15px;
-      font-weight: 600;
-      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-family: 'Sora', sans-serif;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transition: background 0.15s, transform 0.1s;
+      transition: all 0.2s;
+      box-shadow: 0 4px 20px rgba(99,102,241,0.4);
+      letter-spacing: -0.01em;
     }
-    .submit-btn:hover:not(:disabled) { background: var(--brand-dark); }
-    .submit-btn:active:not(:disabled) { transform: scale(0.99); }
-    .submit-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .submit-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 28px rgba(99,102,241,0.5);
+    }
+    .submit-btn:active:not(:disabled) { transform: translateY(0); }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
     .submit-btn svg { width: 18px; height: 18px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
     /* Spinner */
-    .spinner {
-      width: 18px;
-      height: 18px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.6s linear infinite;
-    }
+    .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* Status */
-    .status-box {
-      display: none;
-      padding: 14px 16px;
-      border-radius: var(--radius);
-      font-size: 14px;
-      align-items: center;
-      gap: 10px;
-      margin-top: 1rem;
-    }
+    .status-box { display: none; padding: 14px 16px; border-radius: var(--radius); font-size: 13px; font-weight: 500; align-items: center; gap: 10px; margin-top: 1rem; }
     .status-box.show { display: flex; }
     .status-box svg { width: 18px; height: 18px; flex-shrink: 0; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .status-box.success { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
-    .status-box.success svg { stroke: var(--success); }
-    .status-box.error { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-border); }
-    .status-box.error svg { stroke: var(--danger); }
-    .status-box.loading { background: var(--brand-light); color: var(--brand); border: 1px solid #BFDBFE; }
+    .status-box.success { background: var(--emerald-l); color: #065F46; border: 1px solid #6EE7B7; }
+    .status-box.success svg { stroke: var(--emerald); }
+    .status-box.error { background: var(--coral-l); color: #991B1B; border: 1px solid #FCA5A5; }
+    .status-box.error svg { stroke: var(--coral); }
+    .status-box.loading { background: var(--indigo-l); color: var(--indigo-d); border: 1px solid #C7D2FE; }
+    .status-box.loading svg { stroke: var(--indigo); }
 
     /* Result card */
-    .result-card {
-      display: none;
-      background: #fff;
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-lg);
-      padding: 1.75rem 2rem;
-      margin-top: 1.25rem;
-      animation: fadeUp 0.3s ease;
-    }
+    .result-card { display: none; animation: slideUp 0.4s cubic-bezier(0.16,1,0.3,1); }
     .result-card.show { display: block; }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 
-    .result-header {
+    /* Result header gradient */
+    .result-hero {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      padding: 2rem;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: space-between;
-      margin-bottom: 1.25rem;
+      gap: 1rem;
     }
-    .result-name { font-size: 17px; font-weight: 600; color: var(--gray-900); }
-    .result-role { font-size: 13px; color: var(--gray-400); margin-top: 2px; }
+    .result-info { flex: 1; }
+    .result-name { font-family: 'Sora', sans-serif; font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -0.02em; }
+    .result-role-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px; }
 
+    /* Score ring */
+    .score-ring-wrap { flex-shrink: 0; }
+    .score-ring { position: relative; width: 80px; height: 80px; }
+    .score-ring svg { transform: rotate(-90deg); }
+    .score-ring-bg { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 6; }
+    .score-ring-fill { fill: none; stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 1s cubic-bezier(0.16,1,0.3,1), stroke 0.3s; }
+    .score-ring-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .score-ring-val { font-family: 'Sora', sans-serif; font-size: 18px; font-weight: 800; color: #fff; line-height: 1; }
+    .score-ring-label { font-size: 9px; color: rgba(255,255,255,0.4); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
+
+    /* Badge */
+    .result-badge-wrap { display: flex; justify-content: flex-end; }
     .badge {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      padding: 5px 12px;
+      gap: 6px;
+      padding: 6px 14px;
       border-radius: 999px;
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
       white-space: nowrap;
     }
-    .badge.shortlisted { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
-    .badge.maybe { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning-border); }
-    .badge.archived { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-border); }
-    .badge.processing { background: #EFF6FF; color: var(--brand); border: 1px solid #BFDBFE; }
-    .badge.pending { background: #EFF6FF; color: var(--brand); border: 1px solid #BFDBFE; }
+    .badge-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .badge.shortlisted { background: rgba(16,185,129,0.15); color: #6EE7B7; border: 1px solid rgba(16,185,129,0.3); }
+    .badge.maybe { background: rgba(245,158,11,0.15); color: #FCD34D; border: 1px solid rgba(245,158,11,0.3); }
+    .badge.archived { background: rgba(239,68,68,0.15); color: #FCA5A5; border: 1px solid rgba(239,68,68,0.3); }
+    .badge.processing, .badge.pending { background: rgba(99,102,241,0.15); color: #A5B4FC; border: 1px solid rgba(99,102,241,0.3); }
 
-    .processing-note {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      background: #F0F9FF;
-      border: 1px solid #BAE6FD;
+    /* Result body */
+    .result-body { background: #fff; border-radius: 0 0 var(--radius-xl) var(--radius-xl); padding: 1.75rem 2rem; border: 1px solid var(--gray-100); border-top: none; }
+
+    .meta-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 1.5rem; }
+    .meta-chip {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-100);
       border-radius: var(--radius);
-      padding: 14px;
-      margin-top: 1rem;
+      padding: 12px 14px;
+    }
+    .meta-chip-label { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 4px; }
+    .meta-chip-value { font-size: 14px; font-weight: 600; color: var(--gray-700); }
+
+    /* Score bar (linear, below ring) */
+    .score-section { margin-bottom: 1.25rem; }
+    .score-header { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: var(--gray-500); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .score-track { height: 10px; background: var(--gray-100); border-radius: 999px; overflow: hidden; }
+    .score-fill { height: 100%; border-radius: 999px; transition: width 1s cubic-bezier(0.16,1,0.3,1); }
+
+    .result-summary { font-size: 14px; color: var(--gray-500); line-height: 1.7; padding-top: 1.25rem; border-top: 1px solid var(--gray-100); }
+
+    /* Processing note */
+    .processing-note {
+      display: none;
+      align-items: flex-start;
+      gap: 12px;
+      background: linear-gradient(135deg, #EEF2FF, #F0FDFB);
+      border: 1px solid #C7D2FE;
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin-top: 1.25rem;
       font-size: 13px;
-      color: #0369A1;
+      color: var(--indigo-d);
       line-height: 1.6;
     }
-    .processing-note svg { width: 18px; height: 18px; flex-shrink: 0; stroke: #0369A1; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-top: 1px; }
-
+    .processing-note svg { width: 18px; height: 18px; flex-shrink: 0; stroke: var(--indigo); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-top: 1px; }
     .sheet-link {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      margin-top: 10px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--brand);
+      margin-top: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--indigo);
       text-decoration: none;
       padding: 6px 12px;
       background: #fff;
-      border: 1px solid #BFDBFE;
-      border-radius: var(--radius);
-      transition: background 0.15s;
+      border: 1px solid #C7D2FE;
+      border-radius: 8px;
+      transition: all 0.15s;
     }
-    .sheet-link:hover { background: var(--brand-light); }
-    .sheet-link svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .sheet-link:hover { background: var(--indigo-l); }
+    .sheet-link svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-    .pulse { animation: pulse 1.5s ease-in-out infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-    .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-
-    .score-section { margin-bottom: 1.25rem; }
-    .score-label {
+    /* How it works */
+    .how-section { margin-top: 2.5rem; }
+    .how-title { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.08em; text-align: center; margin-bottom: 1.25rem; }
+    .how-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .how-step {
+      background: #fff;
+      border: 1px solid var(--gray-100);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1rem;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .how-step:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .how-step-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      margin: 0 auto 10px;
       display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      color: var(--gray-500);
-      margin-bottom: 8px;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
     }
-    .score-value { font-weight: 600; color: var(--gray-900); }
-    .score-bar { height: 8px; background: var(--gray-100); border-radius: 4px; overflow: hidden; }
-    .score-fill { height: 100%; border-radius: 4px; transition: width 0.8s cubic-bezier(0.16,1,0.3,1); }
-
-    .result-summary {
-      font-size: 14px;
-      color: var(--gray-500);
-      line-height: 1.6;
-      padding-top: 1rem;
-      border-top: 1px solid var(--gray-100);
-    }
-
-    .result-meta {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 1.25rem;
-    }
-    .meta-item {
-      background: var(--gray-50);
-      border-radius: var(--radius);
-      padding: 10px 12px;
-    }
-    .meta-item-label { font-size: 11px; color: var(--gray-400); font-weight: 500; margin-bottom: 3px; }
-    .meta-item-value { font-size: 14px; font-weight: 600; color: var(--gray-700); }
+    .how-step-num { font-size: 10px; font-weight: 700; color: var(--gray-400); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+    .how-step-title { font-size: 13px; font-weight: 700; color: var(--gray-700); font-family: 'Sora', sans-serif; }
 
     /* Footer */
     footer {
       text-align: center;
-      padding: 2rem;
+      padding: 2rem 1.5rem;
       font-size: 12px;
       color: var(--gray-400);
     }
+    footer a { color: var(--indigo); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
 
-    @media (max-width: 560px) {
+    .pulse { animation: pulse 1.5s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+
+    @media (max-width: 600px) {
       .form-row { grid-template-columns: 1fr; }
-      .result-meta { grid-template-columns: 1fr 1fr; }
-      main { padding: 1.5rem 1rem 3rem; }
-      .card { padding: 1.25rem; }
+      .meta-grid { grid-template-columns: 1fr 1fr; }
+      .how-steps { grid-template-columns: 1fr 1fr; }
+      .card-body { padding: 1.25rem; }
+      .result-hero { flex-direction: column; text-align: center; }
+      .result-badge-wrap { justify-content: center; }
+      .hero-stats { gap: 1.5rem; }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <a class="logo" href="#">
-    <div class="logo-icon">
-      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-    </div>
-    HR Recruitment
-  </a>
-  <span class="header-badge">AI-Powered Screening</span>
-</header>
+<!-- HERO -->
+<div class="hero">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
 
+  <nav>
+    <a class="logo" href="#">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <span class="logo-text">HR<span>Recruit</span> AI</span>
+    </a>
+    <span class="nav-badge">Powered by Groq AI</span>
+  </nav>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">AI-Powered Recruitment</div>
+    <h1 class="hero-title">
+      Screen resumes in<br/>
+      <span class="highlight">seconds, not hours</span>
+    </h1>
+    <p class="hero-sub">Upload a candidate's PDF resume. Our AI evaluates, scores, and routes it automatically — so your team focuses on the best talent.</p>
+
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-val">~<span>30</span>s</div><div class="stat-label">Avg. screening time</div></div>
+      <div class="stat"><div class="stat-val"><span>3</span></div><div class="stat-label">Decision buckets</div></div>
+      <div class="stat"><div class="stat-val"><span>10</span></div><div class="stat-label">Point ATS score</div></div>
+      <div class="stat"><div class="stat-val"><span>0</span></div><div class="stat-label">Manual effort</div></div>
+    </div>
+
+    <div class="steps-bar">
+      <div class="step-item active" id="step1">
+        <div class="step-circle"><span class="step-num">1</span></div>
+        <div class="step-lbl">Details</div>
+      </div>
+      <div class="step-item" id="step2">
+        <div class="step-circle"><span class="step-num">2</span></div>
+        <div class="step-lbl">Upload</div>
+      </div>
+      <div class="step-item" id="step3">
+        <div class="step-circle"><span class="step-num">3</span></div>
+        <div class="step-lbl">AI screens</div>
+      </div>
+      <div class="step-item" id="step4">
+        <div class="step-circle"><span class="step-num">4</span></div>
+        <div class="step-lbl">Decision</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
 <main>
-  <h1 class="page-title">Submit a resume</h1>
-  <p class="page-sub">Upload a candidate's resume and our AI will evaluate it, score it, and log the decision to your recruitment tracker automatically.</p>
 
-  <!-- Steps -->
-  <div class="steps" aria-label="Submission steps">
-    <div class="step active" id="step1">
-      <div class="step-num">1</div>
-      <div class="step-label">Fill details</div>
+  <!-- Candidate details card -->
+  <div class="glass-card">
+    <div class="card-header">
+      <div class="card-header-icon indigo">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="card-header-title">Candidate Details</div>
+      <div class="card-header-sub">All fields marked * are required</div>
     </div>
-    <div class="step" id="step2">
-      <div class="step-num">2</div>
-      <div class="step-label">Upload PDF</div>
-    </div>
-    <div class="step" id="step3">
-      <div class="step-num">3</div>
-      <div class="step-label">AI screens</div>
-    </div>
-    <div class="step" id="step4">
-      <div class="step-num">4</div>
-      <div class="step-label">Decision logged</div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="cname">Full name <span class="req">*</span></label>
+          <input type="text" id="cname" placeholder="Sravanthi Sanga" autocomplete="off" />
+        </div>
+        <div class="form-group">
+          <label for="cemail">Email address <span class="req">*</span></label>
+          <input type="email" id="cemail" placeholder="candidate@gmail.com" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="cphone">Phone number</label>
+          <input type="text" id="cphone" placeholder="+91 98765 43210" />
+        </div>
+        <div class="form-group">
+          <label for="position">Position applied for <span class="req">*</span></label>
+          <select id="position">
+            <option value="">Select a role...</option>
+            <option>Software Engineer</option>
+            <option>Senior QA Engineer</option>
+            <option>Data Analyst</option>
+            <option>Product Manager</option>
+            <option>HR Executive</option>
+            <option>DevOps Engineer</option>
+            <option>UI/UX Designer</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="notes">Recruiter notes (optional)</label>
+        <textarea id="notes" placeholder="Where was the candidate sourced? Any context for the hiring team..."></textarea>
+      </div>
     </div>
   </div>
 
-  <!-- Candidate details -->
-  <div class="card">
-    <div class="card-title">Candidate details</div>
-    <div class="form-row">
-      <div class="form-group">
-        <label for="cname">Full name <span class="req">*</span></label>
-        <input type="text" id="cname" placeholder="Sravanthi Sanga" autocomplete="off" />
+  <!-- Upload card -->
+  <div class="glass-card">
+    <div class="card-header">
+      <div class="card-header-icon emerald">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       </div>
-      <div class="form-group">
-        <label for="cemail">Email address <span class="req">*</span></label>
-        <input type="email" id="cemail" placeholder="candidate@gmail.com" />
-      </div>
+      <div class="card-header-title">Resume Upload</div>
+      <div class="card-header-sub">PDF only · max 10 MB</div>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label for="cphone">Phone number</label>
-        <input type="text" id="cphone" placeholder="+91 98765 43210" />
+    <div class="card-body">
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()" role="button" tabindex="0" aria-label="Upload resume PDF">
+        <div class="upload-icon-wrap">
+          <svg id="uploadSvg" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </div>
+        <div class="upload-title" id="uploadTitle">Click to upload resume PDF</div>
+        <div class="upload-hint" id="uploadHint">Drag & drop or click to browse · PDF only</div>
+        <input type="file" id="fileInput" accept=".pdf" style="display:none" onchange="handleFile(this)" />
       </div>
-      <div class="form-group">
-        <label for="position">Position applied for <span class="req">*</span></label>
-        <select id="position">
-          <option value="">Select a role...</option>
-          <option>Software Engineer</option>
-          <option>Senior QA Engineer</option>
-          <option>Data Analyst</option>
-          <option>Product Manager</option>
-          <option>HR Executive</option>
-          <option>DevOps Engineer</option>
-          <option>UI/UX Designer</option>
-          <option>Other</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="notes">Recruiter notes (optional)</label>
-      <textarea id="notes" placeholder="Any context about this candidate, where they were sourced, etc."></textarea>
-    </div>
-  </div>
-
-  <!-- Resume upload -->
-  <div class="card">
-    <div class="card-title">Resume upload</div>
-    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()" role="button" tabindex="0" aria-label="Upload resume PDF">
-      <div class="upload-icon">
-        <svg id="uploadSvg" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      </div>
-      <div class="upload-title" id="uploadTitle">Click to upload resume PDF</div>
-      <div class="upload-hint" id="uploadHint">PDF only · max 10 MB</div>
-      <input type="file" id="fileInput" accept=".pdf" style="display:none" onchange="handleFile(this)" />
     </div>
   </div>
 
   <!-- Submit -->
   <button class="submit-btn" id="submitBtn" onclick="submitResume()">
     <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-    Submit for AI screening
+    Submit for AI Screening
   </button>
 
-  <!-- Status -->
   <div class="status-box" id="statusBox" role="status" aria-live="polite">
     <svg id="statusIcon" viewBox="0 0 24 24"></svg>
     <span id="statusText"></span>
   </div>
 
-  <!-- Result -->
+  <!-- Result card -->
   <div class="result-card" id="resultCard" aria-live="polite">
-    <div class="result-header">
-      <div>
+    <div class="result-hero">
+      <div class="result-info">
         <div class="result-name" id="resultName"></div>
-        <div class="result-role" id="resultRole"></div>
+        <div class="result-role-tag" id="resultRole"></div>
+        <div style="margin-top:10px" class="result-badge-wrap">
+          <span class="badge" id="resultBadge"><span class="badge-dot"></span><span id="badgeText"></span></span>
+        </div>
       </div>
-      <span class="badge" id="resultBadge"><span class="badge-dot"></span><span id="badgeText"></span></span>
-    </div>
-
-    <div class="result-meta">
-      <div class="meta-item">
-        <div class="meta-item-label">Experience</div>
-        <div class="meta-item-value" id="metaExp">—</div>
-      </div>
-      <div class="meta-item">
-        <div class="meta-item-label">Current role</div>
-        <div class="meta-item-value" id="metaRole">—</div>
-      </div>
-      <div class="meta-item">
-        <div class="meta-item-label">Education</div>
-        <div class="meta-item-value" id="metaEdu">—</div>
-      </div>
-    </div>
-
-    <div class="score-section">
-      <div class="score-label">
-        <span>ATS score</span>
-        <span class="score-value" id="scoreVal">0 / 10</span>
-      </div>
-      <div class="score-bar">
-        <div class="score-fill" id="scoreFill" style="width:0%"></div>
+      <div class="score-ring-wrap">
+        <div class="score-ring">
+          <svg viewBox="0 0 80 80" width="80" height="80">
+            <circle class="score-ring-bg" cx="40" cy="40" r="34"/>
+            <circle class="score-ring-fill" id="ringFill" cx="40" cy="40" r="34"
+              stroke-dasharray="213.6"
+              stroke-dashoffset="213.6"
+              stroke="var(--emerald)"/>
+          </svg>
+          <div class="score-ring-text">
+            <div class="score-ring-val" id="scoreVal">—</div>
+            <div class="score-ring-label">/ 10</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="result-summary" id="resultSummary"></div>
+    <div class="result-body">
+      <div class="meta-grid">
+        <div class="meta-chip">
+          <div class="meta-chip-label">Experience</div>
+          <div class="meta-chip-value" id="metaExp">—</div>
+        </div>
+        <div class="meta-chip">
+          <div class="meta-chip-label">Current role</div>
+          <div class="meta-chip-value" id="metaRole">—</div>
+        </div>
+        <div class="meta-chip">
+          <div class="meta-chip-label">Education</div>
+          <div class="meta-chip-value" id="metaEdu">—</div>
+        </div>
+      </div>
 
-    <div class="processing-note" id="processingNote" style="display:none">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <div>
-        The AI is evaluating this resume in the background. The full score, decision, and candidate details will appear in your Google Sheets tracker within ~1 minute.
-        <br/>
-        <a class="sheet-link" id="sheetLink" href="#" target="_blank">
-          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-          Open Google Sheets Tracker
-        </a>
+      <div class="score-section">
+        <div class="score-header">
+          <span>ATS Score</span>
+          <span id="scoreLabel">—</span>
+        </div>
+        <div class="score-track">
+          <div class="score-fill" id="scoreFill" style="width:0%"></div>
+        </div>
+      </div>
+
+      <div class="result-summary" id="resultSummary"></div>
+
+      <div class="processing-note" id="processingNote">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div>
+          AI is evaluating this resume in the background. The ATS score and decision will update here automatically in ~30 seconds, and will also be logged to your Google Sheets tracker.
+          <br/>
+          <a class="sheet-link" id="sheetLink" href="#" target="_blank">
+            <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Open Google Sheets Tracker
+          </a>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- How it works -->
+  <div class="how-section">
+    <div class="how-title">How it works</div>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="how-step-icon" style="background:#EEF2FF">📋</div>
+        <div class="how-step-num">Step 01</div>
+        <div class="how-step-title">Fill details</div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-icon" style="background:#D1FAE5">📄</div>
+        <div class="how-step-num">Step 02</div>
+        <div class="how-step-title">Upload PDF</div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-icon" style="background:#FEF3C7">🤖</div>
+        <div class="how-step-num">Step 03</div>
+        <div class="how-step-title">AI screens</div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-icon" style="background:#FCE7F3">✅</div>
+        <div class="how-step-num">Step 04</div>
+        <div class="how-step-title">Decision logged</div>
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <footer>
-  Built with n8n · Groq AI · Google Sheets &nbsp;·&nbsp; AI HR Recruitment Assistant
+  Built with <a href="https://n8n.io" target="_blank">n8n</a> · <a href="https://groq.com" target="_blank">Groq AI</a> · Google Sheets &nbsp;·&nbsp;
+  <a href="https://github.com/mastans22602/Hr-Recruitment" target="_blank">View on GitHub</a>
 </footer>
 
 <script>
-  /* ── CONFIG — update these 3 values ── */
+ /* ── CONFIG — update these 3 values ── */
   const WEBHOOK_URL = 'https://among-harbor-borough.ngrok-free.dev/webhook/hr-recruitment';          // POST webhook (submit resume)
   const POLL_URL    = 'https://among-harbor-borough.ngrok-free.dev/webhook/hr-result';             // GET webhook (fetch result by email)
   const SHEET_URL   = 'https://docs.google.com/spreadsheets/d/1pb5yMD1IV4oyg9cFTy5WLiZ3hsglA1ExzFS_vWRro0k/edit?gid=0#gid=0';         // Google Sheets tracker URL
@@ -573,7 +867,6 @@
 
   document.getElementById('sheetLink').href = SHEET_URL;
 
-  /* ── File upload ── */
   function handleFile(input) {
     const zone  = document.getElementById('uploadZone');
     const title = document.getElementById('uploadTitle');
@@ -592,7 +885,6 @@
     if (e.key === 'Enter' || e.key === ' ') document.getElementById('fileInput').click();
   });
 
-  /* ── Step indicator ── */
   function setStep(n) {
     for (let i = 1; i <= 4; i++) {
       const el = document.getElementById('step' + i);
@@ -602,7 +894,6 @@
     }
   }
 
-  /* ── Status bar ── */
   function showStatus(type, msg) {
     const box  = document.getElementById('statusBox');
     const icon = document.getElementById('statusIcon');
@@ -618,7 +909,15 @@
     }
   }
 
-  /* ── Show processing state (while polling) ── */
+  function setRing(score) {
+    const circumference = 213.6;
+    const pct = Math.min(Math.max(score / 10, 0), 1);
+    const offset = circumference - pct * circumference;
+    const fill = document.getElementById('ringFill');
+    fill.style.strokeDashoffset = offset;
+    fill.style.stroke = score > 7 ? '#10B981' : score >= 5 ? '#F59E0B' : '#EF4444';
+  }
+
   function showProcessing(name, role) {
     const card = document.getElementById('resultCard');
     document.getElementById('resultName').textContent    = name;
@@ -626,11 +925,12 @@
     document.getElementById('metaExp').textContent       = '—';
     document.getElementById('metaRole').textContent      = '—';
     document.getElementById('metaEdu').textContent       = '—';
-    document.getElementById('scoreVal').textContent      = '— / 10';
+    document.getElementById('scoreVal').textContent      = '—';
+    document.getElementById('scoreLabel').textContent    = '—';
     document.getElementById('scoreFill').style.width     = '0%';
     document.getElementById('resultSummary').textContent = '';
 
-    const badge    = document.getElementById('resultBadge');
+    const badge     = document.getElementById('resultBadge');
     const badgeText = document.getElementById('badgeText');
     badge.className = 'badge processing';
     badge.querySelector('.badge-dot').classList.add('pulse');
@@ -641,9 +941,7 @@
     setStep(3);
   }
 
-  /* ── Show final result ── */
   function showResult(data) {
-    const card     = document.getElementById('resultCard');
     const name     = data.name || data.candidate || document.getElementById('cname').value || 'Candidate';
     const score    = parseFloat(data.ats_score || data.score || 0);
     const decision = (data.decision || 'Archived').trim();
@@ -651,11 +949,13 @@
     document.getElementById('resultName').textContent    = name;
     document.getElementById('resultRole').textContent    = data.current_role || document.getElementById('position').value || '';
     document.getElementById('metaExp').textContent       = data.experience_years ? data.experience_years + ' yrs' : '—';
-    document.getElementById('metaRole').textContent      = data.current_role ? data.current_role.split(' ').slice(0,2).join(' ') : '—';
+    document.getElementById('metaRole').textContent      = data.current_role ? data.current_role.split(' ').slice(0,3).join(' ') : '—';
     document.getElementById('metaEdu').textContent       = data.education || '—';
     document.getElementById('resultSummary').textContent = data.summary || 'AI evaluation complete. Details logged to Google Sheets.';
+    document.getElementById('scoreVal').textContent      = score.toFixed(1);
+    document.getElementById('scoreLabel').textContent    = score.toFixed(1) + ' / 10';
 
-    const badge    = document.getElementById('resultBadge');
+    const badge     = document.getElementById('resultBadge');
     const badgeText = document.getElementById('badgeText');
     badge.className = 'badge ' + decision.toLowerCase();
     badge.querySelector('.badge-dot').classList.remove('pulse');
@@ -663,43 +963,39 @@
 
     const pct  = Math.min(Math.max(score / 10 * 100, 0), 100);
     const fill = document.getElementById('scoreFill');
-    document.getElementById('scoreVal').textContent = score.toFixed(1) + ' / 10';
-    fill.style.background = score > 7 ? '#16A34A' : score >= 5 ? '#D97706' : '#DC2626';
-    setTimeout(() => { fill.style.width = pct + '%'; }, 100);
+    fill.style.background = score > 7 ? '#10B981' : score >= 5 ? '#F59E0B' : '#EF4444';
+    setTimeout(() => {
+      fill.style.width = pct + '%';
+      setRing(score);
+    }, 100);
 
     document.getElementById('processingNote').style.display = 'none';
-    card.classList.add('show');
+    document.getElementById('resultCard').classList.add('show');
     setStep(4);
     showStatus('success', '✅ AI screening complete! Decision logged to Google Sheets and emails sent.');
   }
 
-  /* ── Poll n8n for result every 5 seconds, up to 90 seconds ── */
   function pollForResult(email, attempts) {
     if (attempts <= 0) {
-      // Give up polling — show sheet link
       showStatus('success', '✅ Resume submitted! Check Google Sheets for the AI decision.');
       document.getElementById('processingNote').style.display = 'flex';
       return;
     }
-
     setTimeout(async () => {
       try {
         const res  = await fetch(POLL_URL + '?email=' + encodeURIComponent(email));
         const data = await res.json();
-
         if (data && data.found && parseFloat(data.ats_score || 0) > 0) {
           showResult(data);
         } else {
-          // Not ready yet — keep polling
           pollForResult(email, attempts - 1);
         }
       } catch (e) {
         pollForResult(email, attempts - 1);
       }
-    }, 5000); // poll every 5 seconds
+    }, 5000);
   }
 
-  /* ── Submit resume ── */
   async function submitResume() {
     const name     = document.getElementById('cname').value.trim();
     const email    = document.getElementById('cemail').value.trim();
@@ -726,16 +1022,10 @@
     formData.append('resume',         file, file.name);
 
     try {
-      // Fire and forget — don't wait for AI to finish
       fetch(WEBHOOK_URL, { method: 'POST', body: formData }).catch(() => {});
-
-      // Immediately show processing state
       showStatus('loading', '⏳ Resume sent! AI is screening now — results appear below in ~30 seconds...');
       showProcessing(name, position);
-
-      // Start polling for result
-      pollForResult(email, 18); // 18 attempts × 5s = 90 seconds max
-
+      pollForResult(email, 18);
     } catch (e) {
       showStatus('success', '✅ Resume submitted! Check Google Sheets for AI decision.');
       showProcessing(name, position);
