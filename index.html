@@ -565,24 +565,25 @@
 </footer>
 
 <script>
-  /* ── CONFIG ── Update both values below ── */
-  const WEBHOOK_URL = 'YOUR_N8N_WEBHOOK_URL';
-  const SHEET_URL = 'YOUR_GOOGLE_SHEET_URL'; // e.g. https://docs.google.com/spreadsheets/d/abc123/edit
-  /* ───────────────────────────────────────── */
+  /* ── CONFIG — update these 3 values ── */
+  const WEBHOOK_URL = 'https://among-harbor-borough.ngrok-free.dev/webhook/hr-recruitment';          // POST webhook (submit resume)
+  const POLL_URL    = 'https://among-harbor-borough.ngrok-free.dev/webhook/hr-result';             // GET webhook (fetch result by email)
+  const SHEET_URL   = 'https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit';         // Google Sheets tracker URL
+  /* ──────────────────────────────────── */
 
-  // Set sheet link dynamically
   document.getElementById('sheetLink').href = SHEET_URL;
 
+  /* ── File upload ── */
   function handleFile(input) {
-    const zone = document.getElementById('uploadZone');
+    const zone  = document.getElementById('uploadZone');
     const title = document.getElementById('uploadTitle');
-    const hint = document.getElementById('uploadHint');
-    const svg = document.getElementById('uploadSvg');
+    const hint  = document.getElementById('uploadHint');
+    const svg   = document.getElementById('uploadSvg');
     if (input.files[0]) {
       zone.classList.add('has-file');
       title.textContent = input.files[0].name;
-      hint.textContent = (input.files[0].size / 1024 / 1024).toFixed(2) + ' MB · ready to submit';
-      svg.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+      hint.textContent  = (input.files[0].size / 1024 / 1024).toFixed(2) + ' MB · ready to submit';
+      svg.innerHTML     = '<polyline points="20 6 9 17 4 12"/>';
       setStep(2);
     }
   }
@@ -591,6 +592,7 @@
     if (e.key === 'Enter' || e.key === ' ') document.getElementById('fileInput').click();
   });
 
+  /* ── Step indicator ── */
   function setStep(n) {
     for (let i = 1; i <= 4; i++) {
       const el = document.getElementById('step' + i);
@@ -600,33 +602,12 @@
     }
   }
 
-  function showProcessing(name, role) {
-    const card = document.getElementById('resultCard');
-    document.getElementById('resultName').textContent = name;
-    document.getElementById('resultRole').textContent = role || '';
-    document.getElementById('metaExp').textContent = '—';
-    document.getElementById('metaRole').textContent = '—';
-    document.getElementById('metaEdu').textContent = '—';
-    document.getElementById('scoreVal').textContent = '— / 10';
-    document.getElementById('scoreFill').style.width = '0%';
-    document.getElementById('resultSummary').textContent = '';
-
-    const badge = document.getElementById('resultBadge');
-    const badgeText = document.getElementById('badgeText');
-    badge.className = 'badge processing';
-    badge.querySelector('.badge-dot').classList.add('pulse');
-    badgeText.textContent = 'Processing';
-
-    document.getElementById('processingNote').style.display = 'flex';
-    card.classList.add('show');
-    setStep(3);
-  }
-
-
-    const box = document.getElementById('statusBox');
+  /* ── Status bar ── */
+  function showStatus(type, msg) {
+    const box  = document.getElementById('statusBox');
     const icon = document.getElementById('statusIcon');
     const text = document.getElementById('statusText');
-    box.className = 'status-box show ' + type;
+    box.className    = 'status-box show ' + type;
     text.textContent = msg;
     if (type === 'success') {
       icon.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
@@ -637,98 +618,132 @@
     }
   }
 
-  function showResult(data) {
+  /* ── Show processing state (while polling) ── */
+  function showProcessing(name, role) {
     const card = document.getElementById('resultCard');
-    const name = data.candidate || data.name || document.getElementById('cname').value || 'Candidate';
-    const score = parseFloat(data.score || data.ats_score || 0);
+    document.getElementById('resultName').textContent    = name;
+    document.getElementById('resultRole').textContent    = role || '';
+    document.getElementById('metaExp').textContent       = '—';
+    document.getElementById('metaRole').textContent      = '—';
+    document.getElementById('metaEdu').textContent       = '—';
+    document.getElementById('scoreVal').textContent      = '— / 10';
+    document.getElementById('scoreFill').style.width     = '0%';
+    document.getElementById('resultSummary').textContent = '';
+
+    const badge    = document.getElementById('resultBadge');
+    const badgeText = document.getElementById('badgeText');
+    badge.className = 'badge processing';
+    badge.querySelector('.badge-dot').classList.add('pulse');
+    badgeText.textContent = 'AI Screening...';
+
+    document.getElementById('processingNote').style.display = 'flex';
+    card.classList.add('show');
+    setStep(3);
+  }
+
+  /* ── Show final result ── */
+  function showResult(data) {
+    const card     = document.getElementById('resultCard');
+    const name     = data.name || data.candidate || document.getElementById('cname').value || 'Candidate';
+    const score    = parseFloat(data.ats_score || data.score || 0);
     const decision = (data.decision || 'Archived').trim();
 
-    document.getElementById('resultName').textContent = name;
-    document.getElementById('resultRole').textContent = data.current_role || document.getElementById('position').value || '';
-    document.getElementById('metaExp').textContent = data.experience_years ? data.experience_years + ' yrs' : '—';
-    document.getElementById('metaRole').textContent = data.current_role ? data.current_role.split(' ').slice(0,2).join(' ') : '—';
-    document.getElementById('metaEdu').textContent = data.education || '—';
-    document.getElementById('resultSummary').textContent = data.summary || 'AI evaluation complete. Full details have been logged to your Google Sheets recruitment tracker.';
+    document.getElementById('resultName').textContent    = name;
+    document.getElementById('resultRole').textContent    = data.current_role || document.getElementById('position').value || '';
+    document.getElementById('metaExp').textContent       = data.experience_years ? data.experience_years + ' yrs' : '—';
+    document.getElementById('metaRole').textContent      = data.current_role ? data.current_role.split(' ').slice(0,2).join(' ') : '—';
+    document.getElementById('metaEdu').textContent       = data.education || '—';
+    document.getElementById('resultSummary').textContent = data.summary || 'AI evaluation complete. Details logged to Google Sheets.';
 
-    const badge = document.getElementById('resultBadge');
+    const badge    = document.getElementById('resultBadge');
     const badgeText = document.getElementById('badgeText');
     badge.className = 'badge ' + decision.toLowerCase();
+    badge.querySelector('.badge-dot').classList.remove('pulse');
     badgeText.textContent = decision;
 
-    const pct = Math.min(Math.max(score / 10 * 100, 0), 100);
-    document.getElementById('scoreVal').textContent = score.toFixed(1) + ' / 10';
+    const pct  = Math.min(Math.max(score / 10 * 100, 0), 100);
     const fill = document.getElementById('scoreFill');
+    document.getElementById('scoreVal').textContent = score.toFixed(1) + ' / 10';
     fill.style.background = score > 7 ? '#16A34A' : score >= 5 ? '#D97706' : '#DC2626';
     setTimeout(() => { fill.style.width = pct + '%'; }, 100);
 
+    document.getElementById('processingNote').style.display = 'none';
     card.classList.add('show');
     setStep(4);
+    showStatus('success', '✅ AI screening complete! Decision logged to Google Sheets and emails sent.');
   }
 
+  /* ── Poll n8n for result every 5 seconds, up to 90 seconds ── */
+  function pollForResult(email, attempts) {
+    if (attempts <= 0) {
+      // Give up polling — show sheet link
+      showStatus('success', '✅ Resume submitted! Check Google Sheets for the AI decision.');
+      document.getElementById('processingNote').style.display = 'flex';
+      return;
+    }
+
+    setTimeout(async () => {
+      try {
+        const res  = await fetch(POLL_URL + '?email=' + encodeURIComponent(email));
+        const data = await res.json();
+
+        if (data && data.found && parseFloat(data.ats_score || 0) > 0) {
+          showResult(data);
+        } else {
+          // Not ready yet — keep polling
+          pollForResult(email, attempts - 1);
+        }
+      } catch (e) {
+        pollForResult(email, attempts - 1);
+      }
+    }, 5000); // poll every 5 seconds
+  }
+
+  /* ── Submit resume ── */
   async function submitResume() {
-    const name = document.getElementById('cname').value.trim();
-    const email = document.getElementById('cemail').value.trim();
+    const name     = document.getElementById('cname').value.trim();
+    const email    = document.getElementById('cemail').value.trim();
     const position = document.getElementById('position').value;
-    const file = document.getElementById('fileInput').files[0];
-    const notes = document.getElementById('notes').value.trim();
-    const btn = document.getElementById('submitBtn');
+    const file     = document.getElementById('fileInput').files[0];
+    const notes    = document.getElementById('notes').value.trim();
+    const btn      = document.getElementById('submitBtn');
 
-    if (!name) { showStatus('error', 'Please enter the candidate name.'); return; }
+    if (!name)                          { showStatus('error', 'Please enter the candidate name.'); return; }
     if (!email || !email.includes('@')) { showStatus('error', 'Please enter a valid email address.'); return; }
-    if (!file) { showStatus('error', 'Please upload the candidate\'s resume PDF.'); return; }
+    if (!file)                          { showStatus('error', 'Please upload the resume PDF.'); return; }
 
-    btn.disabled = true;
-    btn.innerHTML = '<div class="spinner"></div> Screening in progress...';
-    showStatus('loading', 'Sending to AI screening pipeline — this takes about 30 seconds...');
+    btn.disabled  = true;
+    btn.innerHTML = '<div class="spinner"></div> Submitting...';
+    showStatus('loading', 'Sending resume to AI screening pipeline...');
     setStep(3);
 
     const formData = new FormData();
-    formData.append('candidateName', name);
+    formData.append('candidateName',  name);
     formData.append('candidateEmail', email);
     formData.append('candidatePhone', document.getElementById('cphone').value.trim());
-    formData.append('position', position);
-    formData.append('notes', notes);
-    formData.append('resume', file, file.name);
-
-    // Set a 60 second timeout to wait for n8n AI response
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 60000);
+    formData.append('position',       position);
+    formData.append('notes',          notes);
+    formData.append('resume',         file, file.name);
 
     try {
-      const res = await fetch(WEBHOOK_URL, {
-        method: 'POST',
-        body: formData,
-        signal: controller.signal
-      });
-      clearTimeout(timeout);
+      // Fire and forget — don't wait for AI to finish
+      fetch(WEBHOOK_URL, { method: 'POST', body: formData }).catch(() => {});
 
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      let data = {};
-      const ct = res.headers.get('content-type') || '';
-      if (ct.includes('application/json')) {
-        data = await res.json();
-      }
+      // Immediately show processing state
+      showStatus('loading', '⏳ Resume sent! AI is screening now — results appear below in ~30 seconds...');
+      showProcessing(name, position);
 
-      // Check if we got real AI data back
-      if (data && data.score && parseFloat(data.score) > 0) {
-        showStatus('success', '✅ AI screening complete! Decision logged to Google Sheets and emails sent.');
-        showResult(data);
-      } else {
-        // n8n responded but no score yet — still processing
-        showStatus('success', '✅ Resume received! AI is evaluating — check Google Sheets in ~1 minute.');
-        showProcessing(name, position);
-      }
+      // Start polling for result
+      pollForResult(email, 18); // 18 attempts × 5s = 90 seconds max
 
     } catch (e) {
-      clearTimeout(timeout);
-      // Timeout or network error — resume was sent, AI is working in background
-      showStatus('success', '✅ Resume submitted! AI is screening in the background.');
+      showStatus('success', '✅ Resume submitted! Check Google Sheets for AI decision.');
       showProcessing(name, position);
     }
 
-    btn.disabled = false;
+    btn.disabled  = false;
     btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Submit another resume';
-    btn.onclick = () => location.reload();
+    btn.onclick   = () => location.reload();
   }
 </script>
 </body>
